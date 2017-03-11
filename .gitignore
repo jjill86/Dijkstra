@@ -240,3 +240,11 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+#Visual Studio
+*.sln
+*.vcxproj
+*.filters
+
+#Project specifig
+*.grh
