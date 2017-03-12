@@ -41,9 +41,14 @@ int main(){
 
 
 	l_list<int> lst;
-	lst.add(1);
-	lst.add(2);
-	lst.add(3);
+
+	int one = 1;
+	int two = 2;
+	int three = 3;
+
+	lst.add(one);
+	lst.add(two);
+	lst.add(three);
 
 
 	return 0;

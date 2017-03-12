@@ -95,3 +95,12 @@ bool node::operator==(const node &rhs) const {
 bool node::operator!=(const node &rhs) const {
 	return (this->name != rhs.name);
 };
+
+node node::operator=(const node& rhs) {
+	if (rhs != *this) {
+		this->name = rhs.name;
+		this->ngbs = rhs.ngbs;
+		this->ngb_amt = rhs.ngb_amt;
+	}
+	return *this;
+}

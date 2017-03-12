@@ -21,6 +21,7 @@ public:
 	string name; // name of the node
 	ngb * ngbs = nullptr; // array of all neighbours
 
+	node() { node("tmp"); }
 	node(string); 
 	~node();
 	int add_ngb(node*, double);
@@ -40,6 +41,8 @@ public:
 	// operator overloads
 	bool operator==(const node& rhs) const;
 	bool operator!=(const node& rhs) const;
+
+	node operator=(const node& rhs);
 private:
 	int ngb_amt;
 };

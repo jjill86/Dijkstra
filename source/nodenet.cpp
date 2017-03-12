@@ -29,7 +29,7 @@ nodenet::nodenet(unsigned int nds_amt, const unsigned char max_connections, cons
 			string nm = "";
 
 			// create all nodes
-			for (int i = 0; i < nds_amt; i++){
+			for (unsigned int i = 0; i < nds_amt; i++){
 				nm.push_back(alfabet[i]);
 				this->add(node(nm));
 				nm.clear();
