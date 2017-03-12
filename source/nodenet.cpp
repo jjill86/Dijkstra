@@ -59,12 +59,26 @@ bool nodenet::is_connected() {
 	// and closed ones (ones we haven't checked)
 	// we use a trick to keep them in neigbours of node's data
 	node opened("OPN");
-	node closed("CLSD");
-	
+	node * current;
 	opened.add_ngb(net.front(), 1.0);
-	while (opened.ngbs_amt() < this->size()) {
-		
+	int i = 0;
+	int size = this->size();
+	while (opened.ngbs_amt() < size) {
+		current = opened.ngbs[i].n;
+
+		// add all neighbours from current to opened
+		for (int j = 0; j < current->ngbs_amt(); j++) {
+			if (!(opened.is_ngb(current->ngbs[j].n))) 
+				opened.add_ngb(current->ngbs[j].n, 1.0);
+		}
+		i++;
+		// if we don't add enough nodes
+		// and next node counter is bigger
+		// than the amount of accessible nodes
+		// then we exit, with "not connected" result
+		if (i >= opened.ngbs_amt()) return false;
 	}
+	return true;
 }
 
 // Constructor using a file

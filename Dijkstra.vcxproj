@@ -144,11 +144,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\list.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\node.cpp" />
     <ClCompile Include="source\nodenet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\list.h" />
     <ClInclude Include="header\node.h" />
     <ClInclude Include="header\nodenet.h" />
   </ItemGroup>

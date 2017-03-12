@@ -24,12 +24,18 @@
     <ClCompile Include="source\nodenet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="header\nodenet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

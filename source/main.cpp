@@ -3,17 +3,20 @@
 #include <string>
 
 #include "node.h"
+#include "list.h"
 #include "nodenet.h"
 
 #define _TRACE = 0
 using namespace std;
 
 int main(){
-	srand(time(0));
+/*	srand(time(0));
 // generate a net of nodes 
 // in parameters: 15 = amount of nodes, 4 = maximum edges(connections) for a node
 // 10.0 = maximum value of mass per edge
-	nodenet * one = new nodenet(10,4,10.0);
+	nodenet * one = new nodenet(3,0,10.0);
+	cout << one << endl;
+	cout <<"is it connected?:" << one->is_connected() << endl;
 	
 	
 	ofstream f_to_graph; // file to write to
@@ -31,9 +34,17 @@ int main(){
 	f_fr_graph.close();
 	
 	// print out the node net
-	cout << one << endl;
+	//cout << one << endl;
 	
 	// print out the node net created from file
-	cout << two << endl;
+	cout << two << endl; */
+
+
+	l_list<int> lst;
+	lst.add(1);
+	lst.add(2);
+	lst.add(3);
+
+
 	return 0;
 }
