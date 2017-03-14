@@ -41,15 +41,27 @@ int main(){
 
 
 	l_list<int> lst;
+	l_list<node> n_lst;
 
 	int one = 1;
 	int two = 2;
 	int three = 3;
+	int four = 4;
 
 	lst.add(one);
 	lst.add(two);
 	lst.add(three);
+	lst.add(four);
 
+	cout << lst << endl;
 
+	node a("A");
+	node b("B");
+	node c("C");
+	node d("D");
+
+	n_lst.add(node("A"));
+
+	cout << n_lst << endl;
 	return 0;
 }

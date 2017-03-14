@@ -43,6 +43,10 @@ public:
 	bool operator!=(const node& rhs) const;
 
 	node operator=(const node& rhs);
+
+	friend ostream& operator<<(ostream&, const node&);
+	friend ostream& operator<<(ostream&, const node*);
+
 private:
 	int ngb_amt;
 };

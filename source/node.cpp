@@ -104,3 +104,15 @@ node node::operator=(const node& rhs) {
 	}
 	return *this;
 }
+
+// print out operator by object
+ostream& operator<<(ostream& out, const node& lhs){
+	cout << lhs.name;
+	return out;
+}
+
+// print out operator by pointer to the object
+ostream& operator<<(ostream& out, const node * lhs){
+	out << *lhs;
+	return out;
+}

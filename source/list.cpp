@@ -1,6 +1,13 @@
 #include "list.h"
 #include "node.h"
 
+template <class T>
+l_list<T>::l_list() :cnt(0), first(nullptr), last(nullptr), current(nullptr){
+
+};
+template l_list<int>::l_list();
+template l_list<node>::l_list();
+
 template <class T> 
 l_list<T>::~l_list()
 {
@@ -16,15 +23,39 @@ l_list<T>::~l_list()
 template l_list<int>::~l_list();
 template l_list<node>::~l_list();
 
+
+// Add a new item to the end of the linked list
 template <class T>
 void l_list<T>::add(T& newguy) {
+	// allocating memory for the new element
+	current = new element();
+	current->elt = new T(newguy);
+
+	// if this is a first entry
+	// all internal pointers should be identical
+	// and point to null 
 	if (!cnt) {
-		current->elt = newguy;
+		current->prev = nullptr;
 		first = last = current;
 	}
-	last->elt = newguy;
+	// if this is a second element
+	// update the "first" pointer to point at it
+	if (cnt == 1){
+		first->next = current;
+		current->prev = last;
+		last = current;
+	}
 
+	//all the next elements 
+	// update the pointer of the "last" pointer
+	else {
+		last->next = current;
+		current->prev = last;
+		last = current;
+	}
+	current->next = nullptr;
 
+	//increase counter
 	cnt++;
 }
 
