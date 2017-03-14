@@ -8,6 +8,9 @@ l_list<T>::l_list() :cnt(0), first(nullptr), last(nullptr), current(nullptr){
 template l_list<int>::l_list();
 template l_list<node>::l_list();
 
+// destructor - is going through all the chain and deleting
+// elements that were created with "new" operator
+// !!! this is to be updated and verified that it works correctly
 template <class T> 
 l_list<T>::~l_list()
 {
