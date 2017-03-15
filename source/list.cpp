@@ -64,3 +64,20 @@ void l_list<T>::add(T& newguy) {
 
 template void l_list<int>::add(int& newguy);
 template void l_list<node>::add(node& newguy);
+
+// add an array of pointers to the element
+// to the end of linked list
+template <class T>
+void l_list<T>::add(T* elms, unsigned int amt){
+	if (amt <= 0) return;
+	try{
+		for (unsigned int i = 0; i < amt; i++){
+			this->add(elms[i]);
+		}
+	}
+	catch (...){
+		cout << "Error adding array of elements to the linked list. Check the array content" << endl;
+	}
+}
+template void l_list<int>::add(int* elms, unsigned int amt);
+template void l_list<node>::add(node* elms, unsigned int amt);

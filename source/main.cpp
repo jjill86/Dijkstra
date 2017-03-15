@@ -55,12 +55,22 @@ int main(){
 
 	cout << lst << endl;
 
-	node a("A");
-	node b("B");
-	node c("C");
-	node d("D");
+	node* a = new node("A");
+	node* b = new node("B");
+	node* c = new node("C");
+	node* d = new node("D");
 
-	n_lst.add(node("A"));
+	node a1("A1");
+	node b1("B1");
+	node c1("C1");
+	node d1("D1");
+
+	node* arr[4] = {a,b,c,d};
+
+	node arr1[4] = { a1, b1, c1, d1 };
+
+	n_lst.add(arr,4);
+	n_lst.add(arr1,4);
 
 	cout << n_lst << endl;
 	return 0;

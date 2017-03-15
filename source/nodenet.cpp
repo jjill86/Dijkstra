@@ -181,6 +181,15 @@ void nodenet::add_ngb_by_name(string& nm, string& ngb_nm, const double mass) {
 }
 
 double nodenet::DijkSrch(node * start, node * end) const {
+	l_list<node> * opnd;
+	l_list<node> * clsd;
+	node * iter = start;
+
+	while (iter != end){
+		opnd->add(iter->ngbs, iter->ngbs_amt());
+	}
+
+
 	return 0.0;
 }
 

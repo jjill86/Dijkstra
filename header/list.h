@@ -17,8 +17,20 @@ public:
 	l_list();
 	~l_list();
 
-	// add an element to the end of the list
-	void add(T&);
+	// add an element(s) to the end of the list
+	void add(T&); // add a single element
+	void add(T*&elm){ 
+		this->add(*elm); }; // add a single element by pointer
+	void add(T*, unsigned int); // add an array of elements
+	void add(T**e, unsigned int n){ // add an array of pointers to elements
+		if (n <= 0) return;
+		try{
+			for (unsigned int i = 0; i < n; i++) this->add(*(e[i]));
+		}
+		catch (...){
+			cout << "Error adding array of elements to the linked list. Check the array content" << endl;
+		}
+	}
 
 	// print out the chain
 	void print(){

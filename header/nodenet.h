@@ -6,7 +6,9 @@
 #include <algorithm>
 #include <random>
 #include <time.h>
+
 #include "node.h"
+#include "list.h"
 using namespace std;
 class nodenet
 {
