@@ -4,6 +4,7 @@
 
 #include "node.h"
 #include "list.h"
+#include "list_ext.h"
 #include "nodenet.h"
 
 #define _TRACE = 0
@@ -43,7 +44,7 @@ int main(){
 	l_list<int> lst;
 	l_list<node> n_lst;
 
-	int one = 1;
+/*	int one = 1;
 	int two = 2;
 	int three = 3;
 	int four = 4;
@@ -72,6 +73,18 @@ int main(){
 	n_lst.add(arr,4);
 	n_lst.add(arr1,4);
 
-	cout << n_lst << endl;
+	cout << n_lst << endl;*/
+
+	le_list<node, double> le01;
+	node* a = new node("A");
+	node* b = new node("B");
+	double val = 12.3;
+	le01.add(a, val);
+	le01.add(b, 34.5);
+
+	le01.print();
+	cout << le01 << endl;
+
+
 	return 0;
 }

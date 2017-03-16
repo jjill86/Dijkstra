@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <iostream>
+
+#include "list.h"
 using namespace std;
 
 

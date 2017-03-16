@@ -186,9 +186,10 @@ double nodenet::DijkSrch(node * start, node * end) const {
 	node * iter = start;
 
 	while (iter != end){
-		opnd->add(iter->ngbs, iter->ngbs_amt());
+		for (int i = 0; i < iter->ngbs_amt(); i++){
+			opnd->add(iter->ngbs->n);
+		}
 	}
-
 
 	return 0.0;
 }
