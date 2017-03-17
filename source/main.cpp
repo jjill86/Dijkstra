@@ -78,9 +78,20 @@ int main(){
 	le_list<node, double> le01;
 	node* a = new node("A");
 	node* b = new node("B");
+	node* c = new node("C");
+	node* d = new node("D");
 	double val = 12.3;
+	le01.push(c, 123.9);
 	le01.add(a, val);
+	le01.push(d, 13.4);
 	le01.add(b, 34.5);
+
+	le01.rew(2);
+	le01.fwd(2);
+	le01.rew();
+	le01.fwd();
+	le01.rew();
+	le01.remove();
 
 	le01.print();
 	cout << le01 << endl;
