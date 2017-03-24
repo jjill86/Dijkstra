@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\list.cpp" />
-    <ClCompile Include="source\l_iter.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\node.cpp" />
     <ClCompile Include="source\nodenet.cpp" />

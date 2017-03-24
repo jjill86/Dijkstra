@@ -23,8 +23,8 @@ public:
 		if (first){
 			current = first;
 			while (current) {
-				element* tmp = current->next;
-				current = tmp;
+				element* tmp = current;
+				current = current->next;
 				delete tmp->elt;
 				delete tmp;
 			}
@@ -42,13 +42,14 @@ public:
 		// all internal pointers should be identical
 		// and point to null 
 		if (!cnt) {
+			current->next = nullptr;
 			current->prev = nullptr;
 			first = last = current;
 		}
 		
 		// if this is a second element
 		// update it to be "first" element
-		if (cnt == 1){
+		else if (cnt == 1){
 			last->prev = current;
 			current->next = last;
 			first = current;
@@ -138,7 +139,26 @@ public:
 		cout << endl;
 	};
 
-public:
+	// print out operator by object
+	friend ostream& operator<<(ostream& out, const le_list& lhs){
+		element* iter;
+		iter = lhs.first;
+		while (iter != nullptr){
+			cout << "[" << *(iter->elt) << ":" << iter->e_val << "]";
+			if (iter != lhs.last) out << "->";
+			iter = iter->next;
+		}
+		return out;
+	}
+
+	// return size of the list
+	unsigned int size() const { return cnt; }
+
+	// return the total sum of all nodes
+	double sum() const { return sum_val; }
+
+
+private:
 	// advance iterator (which is "current" member of the class)
 	void fwd(unsigned int n=1){
 		if (n<1 && (cur_pos + n)>cnt) return;
@@ -157,7 +177,6 @@ public:
 		}
 	}
 
-public:
 	// remove an element (e.g. during deletion)
 	// can be used for removing element from the back/fromnt etc.
 	// manage links to prev and next
@@ -184,25 +203,40 @@ public:
 		return;// elt;
 	}
 
-private:
+	// insert a single element after the current position
+	void insert(T&elm, D&val){
+		if (current == nullptr || current == last || current == first)	{
+			this->add(elm, val);
+			return;
+		}
+		element* tmp = new element();
+		tmp->elt = new T(elm);
+		tmp->e_val = val;
+
+		tmp->prev = current;
+		tmp->next = current->next;
+		tmp->next->prev = tmp;
+		tmp->prev->next = tmp;
+
+		current = tmp;
+		
+		sum_val += val;
+		cnt++;
+		return;// elm;
+	}
+
+	// insert a single element by pointer
+	void insert(T*&elm, D*val){
+		this->insert(*elm, *val);
+	};
+
+	// insert a single element by pointer
+	void insert(T*&elm, D val){
+		this->insert(*elm, val);
+	}; // add a single element by pointer
+
 	T head()const{ return *(first->elt); }
 	T end()const{ return *(last->elt); }
-
-public:
-	unsigned int size() const { return cnt; }
-	double sum() const { return sum_val; }
-
-	// print out operator by object
-	friend ostream& operator<<(ostream& out, const le_list& lhs){
-		element* iter;
-		iter = lhs.first;
-		while (iter != nullptr){
-			cout << "[" << *(iter->elt) << ":" << iter->e_val << "]";
-			if (iter != lhs.last) out << "->";
-			iter = iter->next;
-		}
-		return out;
-	}
 
 private:
 	unsigned int cnt;

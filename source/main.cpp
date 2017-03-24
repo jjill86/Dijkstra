@@ -80,22 +80,20 @@ int main(){
 	node* b = new node("B");
 	node* c = new node("C");
 	node* d = new node("D");
+	node* e = new node("E");
 	double val = 12.3;
-	le01.push(c, 123.9);
-	le01.add(a, val);
-	le01.push(d, 13.4);
-	le01.add(b, 34.5);
-
-	le01.rew(2);
-	le01.fwd(2);
-	le01.rew();
-	le01.fwd();
-	le01.rew();
-	le01.remove();
-
-	le01.print();
+	cout << "push c" << endl;
+	le01.push(c, 123.9); 
 	cout << le01 << endl;
-
+	cout << "add a" << endl;
+	le01.add(a, val); 
+	cout << le01 << endl;
+	cout << "push d" << endl;
+	le01.push(d, 13.4); 
+	cout << le01 << endl;
+	cout << "add b" << endl;
+	le01.add(b, 34.5); 
+	cout << le01 << endl;
 
 	return 0;
 }
