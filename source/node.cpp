@@ -1,7 +1,7 @@
 #include "node.h"
 
 // constructor - assign name to the node
-node::node(string nm) :ngb_amt(0), name(nm)
+node::node(string nm) :ngb_amt(0), name(nm), parent(nullptr)
 {
 	//ngbs = new ngb[MAX_NGBS];
 }

@@ -296,9 +296,13 @@ public:
 	// remove an element (e.g. during deletion)
 	// can be used for removing element from the back/fromnt etc.
 	// manage links to prev and next
-	void remove(){
+	void remove(const bool destroy = true){
+		element* tmp = current;
 		if (current == nullptr) throw - 1;
-		if (current == last){
+		if (current == last && current == first){
+			current = last = first = nullptr;		
+		}
+		else if (current == last){
 			last = current->prev;
 			last->next = nullptr;
 			current = last;
@@ -313,18 +317,27 @@ public:
 			current->prev->next = current->next;
 			current = current->next;
 		}
-		sum_val -= current->e_val;
+		sum_val -= tmp->e_val;
 		cnt--;
+		if (destroy) delete tmp;
 		return;// elt;
 	}
 
+	// removes the element from the list
+	// but doesn't destroy it
+	element * cut_out(){
+		element* tmp = current;
+		this->remove(false);
+		return tmp;
+	}
 public:
 	T head()const{ return *(first->elt); }
 	T end()const{ return *(last->elt); }
 	void to_start(){ current = first; }
 	void to_end(){ current = last; }
 	member curr_pos(){ 
-		member tmp = { current->elt, current->e_val };
+		member tmp = { nullptr, 0.0 };
+		if (current != nullptr) tmp = {current->elt, current->e_val };
 		return tmp;
 	}
 

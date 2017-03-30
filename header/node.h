@@ -50,6 +50,9 @@ public:
 	friend ostream& operator<<(ostream&, const node&);
 	friend ostream& operator<<(ostream&, const node*);
 
+	void set_parrent(node* p){ parent = p; }
+	node* get_parrent(){ return parent; }
 private:
 	int ngb_amt;
+	node* parent;
 };

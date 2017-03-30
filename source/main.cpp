@@ -23,9 +23,9 @@ srand(time(0));
 	ofstream f_to_graph; // file to write to
 	ifstream f_fr_graph; // file to read from
 
-//	f_to_graph.open("graph.grh", ios::out);
-//	f_to_graph << one;
-//	f_to_graph.close();
+	f_to_graph.open("graph.grh", ios::out);
+	f_to_graph << one;
+	f_to_graph.close();
 
 	// read from the file
 	f_fr_graph.open("graph.grh", ios::in);
@@ -39,8 +39,9 @@ srand(time(0));
 	
 	// print out the node net created from file
 	cout << two << endl;
-	string start = "B";
-	string end = "O";
+	cout << "is it connected?:" << two->is_connected() << endl;
+	string start = "G";
+	string end = "J";
 	cout << "Shortest path from <"<< start <<"> to <"<< end << ">: "<< two->DijkSrch(start, end)<<endl;
 
 

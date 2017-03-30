@@ -51,7 +51,7 @@ nodenet::~nodenet()
 {
 }
 
-// method to determine if the graph is connecte
+// method to determine if the graph is connected
 // connected - means if all nodes are reachable
 // from every oter node. e.g. for any node selected
 // there's a path to every other nodes in the net
@@ -182,23 +182,36 @@ void nodenet::add_ngb_by_name(string& nm, string& ngb_nm, const double mass) {
 }
 
 double nodenet::DijkSrch(node* start,node* end) const {
-	le_list<node, double> * result = new le_list<node, double>(start, 0.0);
+	le_list<node, double> * result = new le_list<node, double>;// (start, 0.0);
 	le_list<node, double> * work_arr = new le_list<node, double>(start, 0.0);
+	le_list<node, double> * closed = new le_list<node, double>;
+
 	work_arr->to_start();
 	node::ngb * iter = &(work_arr->curr_pos());
 	double base_length = 0.0;
 
-	while (iter->n->name != end->name && iter != nullptr){
+	while (iter->n != nullptr && iter->n->name != end->name){
 		for (int i = 0; i < iter->n->ngbs_amt(); i++){
+			if (closed->is_duplicate(iter->n->ngbs[i])) continue;
+			cout << "Add <" << iter->n->ngbs[i].n << ">[" << iter->n->ngbs[i].mass << "] <<<" << endl;
+			iter->n->ngbs[i].n->set_parrent(iter->n);
 			work_arr->add_sort(iter->n->ngbs[i], base_length);
-			cout << "Add " << iter->n->ngbs[i].n << "<<<<" <<endl;
-			cout << *work_arr << endl;
 		}
 		work_arr->to_start();
-		work_arr->remove();
+		closed->add(work_arr->cut_out()->elt,0.0);
 		iter = &(work_arr->curr_pos());
 		base_length = work_arr->curr_pos().mass;
+		cout << "OPND: " << *work_arr << endl;
+		cout << "CLSD: "<< *closed << endl;
 	}
+	work_arr->to_start();
+	cout << endl;
+	iter = &(work_arr->curr_pos());
+	while (iter->n != nullptr){
+		result->push(iter->n, 0.0);
+		iter->n = iter->n->get_parrent();
+	}
+	cout << *result << endl;
 	return base_length;
 }
 
