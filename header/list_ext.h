@@ -1,16 +1,15 @@
 #pragma once
 #include <ostream>
+#include "node.h"
 using namespace std;
+
 // Extended Linked list class. Will take 2 values
 // Made to replace a structure of node+edge value
 // elements will keep 2 values of specified type,
 // and have a pointer to the next element in the list
 template <class T, class D>
 class le_list{
-	friend class l_iter;
-protected:
-	// structure to keep in memory
-	struct element {
+	typedef struct element {
 		T* elt;
 		D e_val;
 		element* prev;
@@ -19,6 +18,11 @@ protected:
 public:
 	le_list() :cnt(0),sum_val(0.0),cur_pos(0),first(nullptr), 
 			   last(nullptr), current(nullptr){};
+	le_list(T* elt, D val = 0) :cnt(0), sum_val(0), cur_pos(0), 
+		first(nullptr), last(nullptr), current(nullptr){
+		this->add(elt, val);
+	};
+
 	~le_list(){
 		if (first){
 			current = first;
@@ -30,6 +34,8 @@ public:
 			}
 		}
 	};
+
+	typedef node::ngb member;
 
 	// add an element(s) to the beginning of the list
 	void push(T&elm, D&val) {
@@ -127,6 +133,71 @@ public:
 		this->add(*elm, val);
 	}; // add a single element by pointer
 
+	// add an element as a pointer to a stucture
+	void add(member* m){
+		this->add(m->n, m->mass);
+	}
+	// add an element as a stucture
+	void add(member& m){
+		this->add(m.n, m.mass);
+	}
+	// add an array of elements to the list
+	void add(member elts[], int amt){
+		if (amt <= 0) return;
+		for (int i = 0; i < amt; i++){
+			this->add(elts[i]);
+		}
+	}
+
+// =============== adding elements and sorting them =============
+	void add_sort(member &m, D base_len=0.0){
+		m.mass += base_len;
+		if (this->is_duplicate(m, true)) return;
+		if (current == nullptr) this->add(m);// adding first element
+		else if (current == last && m.mass > current->e_val) this->add(m); // adding the largest element
+		else if (current == first && m.mass <= current->e_val) this->push(m.n, m.mass); // addding the smallest element		
+		else if (m.mass > current->e_val && m.mass <= current->next->e_val) {
+			this->insert(m);
+		}
+		else if (m.mass <= current->e_val){
+			this->rew();
+			this->add_sort(m);
+			return;
+		}
+		else if (m.mass > current->e_val){
+			this->fwd();
+			this->add_sort(m);
+			return;
+		}
+		else {
+			cout << "add_sort: this one slipped! " << m.n << endl;
+		}
+		return;
+	}
+	void add_sort(member *m){
+		this->add_sort(*m);
+	}
+
+	// find if there'an element with a higher or equal e_val value in the list
+	// remove it if remove parameter is true
+	bool is_duplicate (member& m, bool remove = false){
+		element *tmp = this->first;
+		while (tmp){
+			if (m.n->name == tmp->elt->name){
+				if (m.mass < tmp->e_val){
+					if (remove){
+						current = tmp;
+						this->remove();
+					}
+					return false;
+				}
+				else return true;
+			}
+			tmp = tmp->next;
+		}
+		return false;
+	}
+	
 	// print out the chain
 	void print(){
 		element* next;
@@ -144,6 +215,7 @@ public:
 		element* iter;
 		iter = lhs.first;
 		while (iter != nullptr){
+			if (iter == lhs.current) cout << "^";
 			cout << "[" << *(iter->elt) << ":" << iter->e_val << "]";
 			if (iter != lhs.last) out << "->";
 			iter = iter->next;
@@ -157,55 +229,32 @@ public:
 	// return the total sum of all nodes
 	double sum() const { return sum_val; }
 
-
 private:
 	// advance iterator (which is "current" member of the class)
-	void fwd(unsigned int n=1){
-		if (n<1 && (cur_pos + n)>cnt) return;
-		for (; n > 0; n--){
+	const element* fwd(const int n=1){
+		if (n<0) this->rew(n * -1);
+		if (n<1 && (cur_pos + n)>cnt) throw -1;
+		for (int i=n; i > 0; i--){
 			current = current->next;
 			cur_pos++;
 		}
+		return current;
 	}
 
 	// move back iterator (which is "current" member of the class)
-	void rew(unsigned int n = 1){
-		if (n<1 && (cur_pos - n)>=0) return;
-		for (; n > 0; n--){
+	const element* rew(const int n = 1){
+		if (n<0) return this->fwd(n * -1);
+		if (n<1 && (cur_pos - n)>=0) throw -1;
+		for (int i=n; i > 0; i--){
 			current = current->prev;
 			cur_pos--;
 		}
-	}
-
-	// remove an element (e.g. during deletion)
-	// can be used for removing element from the back/fromnt etc.
-	// manage links to prev and next
-	void remove(){
-		T elt = *(current->elt);
-		if (current==nullptr) throw -1;
-		if (current == last){
-			last = current->prev;
-			last->next = nullptr;
-			current = last;
-		}
-		else if (current == first){
-			first = current->next;
-			first->prev = nullptr;
-			current = first;
-		}
-		else{
-			current->next->prev = current->prev;
-			current->prev->next = current->next;
-			current = current->next;
-		}
-		sum_val -= current->e_val;
-		cnt--;
-		return;// elt;
+		return current;
 	}
 
 	// insert a single element after the current position
 	void insert(T&elm, D&val){
-		if (current == nullptr || current == last || current == first)	{
+		if (current == nullptr || (current == last && current == first))	{
 			this->add(elm, val);
 			return;
 		}
@@ -235,8 +284,49 @@ private:
 		this->insert(*elm, val);
 	}; // add a single element by pointer
 
+	// insert a member struct
+	void insert(member m){
+		this->insert(m.n, m.mass);
+	}
+	void insert(member* m){
+		this->insert(m->n, m->mass);
+	}
+
+public:
+	// remove an element (e.g. during deletion)
+	// can be used for removing element from the back/fromnt etc.
+	// manage links to prev and next
+	void remove(){
+		if (current == nullptr) throw - 1;
+		if (current == last){
+			last = current->prev;
+			last->next = nullptr;
+			current = last;
+		}
+		else if (current == first){
+			first = current->next;
+			first->prev = nullptr;
+			current = first;
+		}
+		else{
+			current->next->prev = current->prev;
+			current->prev->next = current->next;
+			current = current->next;
+		}
+		sum_val -= current->e_val;
+		cnt--;
+		return;// elt;
+	}
+
+public:
 	T head()const{ return *(first->elt); }
 	T end()const{ return *(last->elt); }
+	void to_start(){ current = first; }
+	void to_end(){ current = last; }
+	member curr_pos(){ 
+		member tmp = { current->elt, current->e_val };
+		return tmp;
+	}
 
 private:
 	unsigned int cnt;
@@ -249,4 +339,3 @@ private:
 	// used internally to allocate new elements
 
 };
-

@@ -1,5 +1,6 @@
 // own libraries
 #include "nodenet.h"
+#include "list_ext.h"
 #define HEAD "-------"
 // generate random number with min and max values
 double RndFloat(const double a, const double b) {
@@ -180,33 +181,43 @@ void nodenet::add_ngb_by_name(string& nm, string& ngb_nm, const double mass) {
 	}
 }
 
-double nodenet::DijkSrch(node * start, node * end) const {
-	l_list<node> * opnd;
-	l_list<node> * clsd;
-	node * iter = start;
+double nodenet::DijkSrch(node* start,node* end) const {
+	le_list<node, double> * result = new le_list<node, double>(start, 0.0);
+	le_list<node, double> * work_arr = new le_list<node, double>(start, 0.0);
+	work_arr->to_start();
+	node::ngb * iter = &(work_arr->curr_pos());
+	double base_length = 0.0;
 
-	while (iter != end){
-		for (int i = 0; i < iter->ngbs_amt(); i++){
-			opnd->add(iter->ngbs->n);
+	while (iter->n->name != end->name && iter != nullptr){
+		for (int i = 0; i < iter->n->ngbs_amt(); i++){
+			work_arr->add_sort(iter->n->ngbs[i], base_length);
+			cout << "Add " << iter->n->ngbs[i].n << "<<<<" <<endl;
+			cout << *work_arr << endl;
 		}
+		work_arr->to_start();
+		work_arr->remove();
+		iter = &(work_arr->curr_pos());
+		base_length = work_arr->curr_pos().mass;
 	}
-
-	return 0.0;
+	return base_length;
 }
 
 // apply search by the name of the node
 // procedure will find start and end nodes by name 
 // and pass pointers to the other DijkSearch with pointers 
 double nodenet::DijkSrch(string start, string end) const {
-	node * s = nullptr;
-	node * e = nullptr;
-	for (node it : net){
+	const node* s=nullptr;
+	const node* e=nullptr;
+	
+	for (auto& it : net){
 		if (!s && (it.name == start)) s = &it;
 		if (!e && (it.name == end)) e = &it;
 		if (s && e) break;
 	}
 	if (!s || !e) return 1;
-	return nodenet::DijkSrch(s, e);
+	node * st = const_cast<node*>(s);
+	node * en = const_cast<node*>(e);
+	return nodenet::DijkSrch(st, en);
 }
 
 // print out operator by object

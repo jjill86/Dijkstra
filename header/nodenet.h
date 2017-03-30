@@ -27,7 +27,7 @@ public:
 	bool is_connected();
 	unsigned int size() const { return static_cast<int>(net.size()); }
 
-	double DijkSrch(node *, node *) const;
+	double DijkSrch(node*, node*) const;
 	double DijkSrch(string, string) const;
 
 	friend ostream& operator<<(ostream& out, const nodenet&);

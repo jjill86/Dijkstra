@@ -12,6 +12,7 @@ class node
 {
 	// struct to keep an array of neighbours with
 	// the mass of a connection
+public:
 	typedef struct ngb{
 		node * n;
 		double mass;

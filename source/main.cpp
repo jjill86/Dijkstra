@@ -11,11 +11,11 @@
 using namespace std;
 
 int main(){
-/*	srand(time(0));
+srand(time(0));
 // generate a net of nodes 
 // in parameters: 15 = amount of nodes, 4 = maximum edges(connections) for a node
 // 10.0 = maximum value of mass per edge
-	nodenet * one = new nodenet(3,0,10.0);
+	nodenet * one = new nodenet(15,2,10.0);
 	cout << one << endl;
 	cout <<"is it connected?:" << one->is_connected() << endl;
 	
@@ -38,7 +38,10 @@ int main(){
 	//cout << one << endl;
 	
 	// print out the node net created from file
-	cout << two << endl; */
+	cout << two << endl;
+	string start = "B";
+	string end = "O";
+	cout << "Shortest path from <"<< start <<"> to <"<< end << ">: "<< two->DijkSrch(start, end)<<endl;
 
 
 	l_list<int> lst;
@@ -75,7 +78,7 @@ int main(){
 
 	cout << n_lst << endl;*/
 
-	le_list<node, double> le01;
+/*	le_list<node, double> le01;
 	node* a = new node("A");
 	node* b = new node("B");
 	node* c = new node("C");
@@ -94,6 +97,8 @@ int main(){
 	cout << "add b" << endl;
 	le01.add(b, 34.5); 
 	cout << le01 << endl;
+
+	le_list<node, double>::member memb;*/
 
 	return 0;
 }
