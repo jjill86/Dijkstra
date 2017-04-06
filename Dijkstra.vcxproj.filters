@@ -44,6 +44,9 @@
     <ClInclude Include="header\l_iter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="header\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore">

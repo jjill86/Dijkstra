@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-#include "list.h"
+#include "common.h"
 using namespace std;
 
 
@@ -13,10 +13,7 @@ class node
 	// struct to keep an array of neighbours with
 	// the mass of a connection
 public:
-	typedef struct ngb{
-		node * n;
-		double mass;
-	} ngb;
+	typedef member<node, double> ngb;
 
 private:
 	const int MAX_NGBS = 35;
@@ -41,11 +38,16 @@ public:
 
 	int ngbs_amt() const { return ngb_amt; };
 	
+	// swap nodes method
+	node swap(node& rhs);
 	// operator overloads
+	// -- copy constructors
+	node& operator=(const node& rhs);
+	node* operator=(const node*rhs);
+
+	// -- comparison
 	bool operator==(const node& rhs) const;
 	bool operator!=(const node& rhs) const;
-
-	node operator=(const node& rhs);
 
 	friend ostream& operator<<(ostream&, const node&);
 	friend ostream& operator<<(ostream&, const node*);

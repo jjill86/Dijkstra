@@ -154,6 +154,7 @@
     <ClCompile Include="source\nodenet.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\common.h" />
     <ClInclude Include="header\list.h" />
     <ClInclude Include="header\list_ext.h" />
     <ClInclude Include="header\l_iter.h" />

@@ -17,7 +17,7 @@ nodenet::nodenet()
 {
 }
 // constructor to generate a matrix of nodes to the nodenet
-// params: nodes amount; maximum edges per node; maximum mass on edge
+// params: nodes amount; maximum edges per node; maximum value on edge
 nodenet::nodenet(unsigned int nds_amt, const unsigned char max_connections, const double max_mass){
 	// check input parameters
 	if (nds_amt > 1 &&
@@ -36,7 +36,7 @@ nodenet::nodenet(unsigned int nds_amt, const unsigned char max_connections, cons
 				nm.clear();
 			}
 
-			// add edges and edge mass randomely
+			// add edges and edge value randomely
 			for (node& it_i : net){
 				for (node& it_j : net){
 					if (it_i != it_j && FlipCoin((max_connections*1.0 / nds_amt*1.0))){
@@ -65,12 +65,12 @@ bool nodenet::is_connected() {
 	int i = 0;
 	int size = this->size();
 	while (opened.ngbs_amt() < size) {
-		current = opened.ngbs[i].n;
+		current = opened.ngbs[i].elt;
 
 		// add all neighbours from current to opened
 		for (int j = 0; j < current->ngbs_amt(); j++) {
-			if (!(opened.is_ngb(current->ngbs[j].n))) 
-				opened.add_ngb(current->ngbs[j].n, 1.0);
+			if (!(opened.is_ngb(current->ngbs[j].elt))) 
+				opened.add_ngb(current->ngbs[j].elt, 1.0);
 		}
 		i++;
 		// if we don't add enough nodes
@@ -145,16 +145,16 @@ nodenet::nodenet(ifstream &fs){
 
 
 // add a node to the nodenet by pointer
-void nodenet::add(node * n){ nodenet::add(*n); }
+void nodenet::add(node * elt){ nodenet::add(*elt); }
 
 // add a node to the net by node instance
-void nodenet::add(const node &n){
-	if (!net.empty() && (std::find(net.begin(), net.end(), n) != net.end())){
-		cout << "Node <" << n.name << "> you're trying to add, is already in the net!" << endl;
+void nodenet::add(const node &elt){
+	if (!net.empty() && (std::find(net.begin(), net.end(), elt) != net.end())){
+		cout << "Node <" << elt.name << "> you're trying to add, is already in the net!" << endl;
 		throw 1;
 		return;
 	}
-	net.push_back(n);
+	net.push_back(elt);
 }
 
 // get a node from the net by it's name
@@ -170,11 +170,11 @@ node* nodenet::get_by_name(string& nm) {
 }
 
 // add a neighbor to a node in the net by it's name
-void nodenet::add_ngb_by_name(string& nm, string& ngb_nm, const double mass) {
+void nodenet::add_ngb_by_name(string& nm, string& ngb_nm, const double elt_val) {
 	node* nd = nodenet::get_by_name(nm);
 	node* ngb = nodenet::get_by_name(ngb_nm);
 	try{
-		nd->add_ngb(ngb, mass);
+		nd->add_ngb(ngb, elt_val);
 	}
 	catch (...){
 		cout << "Error: Couldn't add the neighbour to the node!" << endl;
@@ -190,28 +190,31 @@ double nodenet::DijkSrch(node* start,node* end) const {
 	node::ngb * iter = &(work_arr->curr_pos());
 	double base_length = 0.0;
 
-	while (iter->n != nullptr && iter->n->name != end->name){
-		for (int i = 0; i < iter->n->ngbs_amt(); i++){
-			if (closed->is_duplicate(iter->n->ngbs[i])) continue;
-			cout << "Add <" << iter->n->ngbs[i].n << ">[" << iter->n->ngbs[i].mass << "] <<<" << endl;
-			iter->n->ngbs[i].n->set_parrent(iter->n);
-			work_arr->add_sort(iter->n->ngbs[i], base_length);
+	while (iter->elt != nullptr && iter->elt->name != end->name){
+		for (int i = 0; i < iter->elt->ngbs_amt(); i++){
+			if (closed->is_duplicate(iter->elt->ngbs[i])) continue;
+			cout << "Add <" << iter->elt->ngbs[i].elt << ">[" << iter->elt->ngbs[i].elt_val << "] <<<" << endl;
+			iter->elt->ngbs[i].elt->set_parrent(iter->elt);
+			work_arr->add_sort(iter->elt->ngbs[i], base_length);
 		}
 		work_arr->to_start();
-		closed->add(work_arr->cut_out()->elt,0.0);
+		closed->add(work_arr->cut_out()->m.elt,0.0);
 		iter = &(work_arr->curr_pos());
-		base_length = work_arr->curr_pos().mass;
+		base_length = work_arr->curr_pos().elt_val;
 		cout << "OPND: " << *work_arr << endl;
 		cout << "CLSD: "<< *closed << endl;
 	}
 	work_arr->to_start();
 	cout << endl;
 	iter = &(work_arr->curr_pos());
-	while (iter->n != nullptr){
-		result->push(iter->n, 0.0);
-		iter->n = iter->n->get_parrent();
+	while (iter->elt != nullptr){
+		result->push(iter->elt, 0.0);
+		iter->elt = iter->elt->get_parrent();
 	}
 	cout << *result << endl;
+	delete result;
+	delete work_arr;
+	delete closed;
 	return base_length;
 }
 
@@ -248,7 +251,7 @@ ostream& operator<<(ostream& out,const nodenet& lhs){
 
 	for (auto const& it_i : lhs.net){
 		out << it_i.name << "\t";
-		// print out the mass value if node is a neighbour
+		// print out the elt_val value if node is a neighbour
 		for (auto const& it_j : lhs.net){
 			if (it_i.is_ngb(it_j.name)){
 				out << it_i.get_ngb_mass(it_j.name)<<"\t";

@@ -1,6 +1,6 @@
 #pragma once
 #include <ostream>
-#include "node.h"
+#include "common.h"
 using namespace std;
 
 // Extended Linked list class. Will take 2 values
@@ -9,9 +9,9 @@ using namespace std;
 // and have a pointer to the next element in the list
 template <class T, class D>
 class le_list{
+	typedef member<T, D> member;
 	typedef struct element {
-		T* elt;
-		D e_val;
+		member m;
 		element* prev;
 		element* next;
 	};
@@ -25,24 +25,22 @@ public:
 
 	~le_list(){
 		if (first){
-			current = first;
-			while (current) {
-				element* tmp = current;
-				current = current->next;
-				delete tmp->elt;
-				delete tmp;
+			while(current != nullptr){
+				current = first->next;
+				delete first;
+				first = current;
 			}
 		}
 	};
 
-	typedef node::ngb member;
+	//	typedef T::ngb member;
 
 	// add an element(s) to the beginning of the list
 	void push(T&elm, D&val) {
 		// allocating memory for the new element
 		current = new element();
-		current->elt = new T(elm);
-		current->e_val = val;
+		current->m.elt = new T(elm);
+		current->m.elt_val = val;
 
 		// if this is a first entry
 		// all internal pointers should be identical
@@ -90,8 +88,8 @@ public:
 	void add(T&elm, D&val) {
 		// allocating memory for the new element
 		current = new element();
-		current->elt = new T(elm);
-		current->e_val = val;
+		current->m.elt = new T(elm);
+		current->m.elt_val = val;
 
 		// if this is a first entry
 		// all internal pointers should be identical
@@ -139,7 +137,7 @@ public:
 	}
 	// add an element as a stucture
 	void add(member& m){
-		this->add(m.n, m.mass);
+		this->add(m.elt, m.elt_val);
 	}
 	// add an array of elements to the list
 	void add(member elts[], int amt){
@@ -151,26 +149,26 @@ public:
 
 // =============== adding elements and sorting them =============
 	void add_sort(member &m, D base_len=0.0){
-		m.mass += base_len;
+		m.elt_val += base_len;
 		if (this->is_duplicate(m, true)) return;
 		if (current == nullptr) this->add(m);// adding first element
-		else if (current == last && m.mass > current->e_val) this->add(m); // adding the largest element
-		else if (current == first && m.mass <= current->e_val) this->push(m.n, m.mass); // addding the smallest element		
-		else if (m.mass > current->e_val && m.mass <= current->next->e_val) {
+		else if (current == last && m.elt_val > current->m.elt_val) this->add(m); // adding the largest element
+		else if (current == first && m.elt_val <= current->m.elt_val) this->push(m.elt, m.elt_val); // addding the smallest element		
+		else if (m.elt_val > current->m.elt_val && m.elt_val <= current->next->m.elt_val) {
 			this->insert(m);
 		}
-		else if (m.mass <= current->e_val){
+		else if (m.elt_val <= current->m.elt_val){
 			this->rew();
 			this->add_sort(m);
 			return;
 		}
-		else if (m.mass > current->e_val){
+		else if (m.elt_val > current->m.elt_val){
 			this->fwd();
 			this->add_sort(m);
 			return;
 		}
 		else {
-			cout << "add_sort: this one slipped! " << m.n << endl;
+			cout << "add_sort: this one slipped! " << m.elt << endl;
 		}
 		return;
 	}
@@ -178,13 +176,13 @@ public:
 		this->add_sort(*m);
 	}
 
-	// find if there'an element with a higher or equal e_val value in the list
+	// find if there'an element with a higher or equal elt_val value in the list
 	// remove it if remove parameter is true
 	bool is_duplicate (member& m, bool remove = false){
 		element *tmp = this->first;
 		while (tmp){
-			if (m.n->name == tmp->elt->name){
-				if (m.mass < tmp->e_val){
+			if (m.elt->name == tmp->m.elt->name){
+				if (m.elt_val < tmp->m.elt_val){
 					if (remove){
 						current = tmp;
 						this->remove();
@@ -203,7 +201,7 @@ public:
 		element* next;
 		next = first;
 		while (next != nullptr){
-			cout << "[" << *(next->elt) << ":" << next->e_val << "]";
+			cout << "[" << *(next->elt) << ":" << next->elt_val << "]";
 			if (next != last) cout << "->";
 			next = next->next;
 		}
@@ -216,7 +214,7 @@ public:
 		iter = lhs.first;
 		while (iter != nullptr){
 			if (iter == lhs.current) cout << "^";
-			cout << "[" << *(iter->elt) << ":" << iter->e_val << "]";
+			cout << "[" << *(iter->m.elt) << ":" << iter->m.elt_val << "]";
 			if (iter != lhs.last) out << "->";
 			iter = iter->next;
 		}
@@ -259,8 +257,8 @@ private:
 			return;
 		}
 		element* tmp = new element();
-		tmp->elt = new T(elm);
-		tmp->e_val = val;
+		tmp->m.elt = new T(elm);
+		tmp->m.elt_val = val;
 
 		tmp->prev = current;
 		tmp->next = current->next;
@@ -286,7 +284,7 @@ private:
 
 	// insert a member struct
 	void insert(member m){
-		this->insert(m.n, m.mass);
+		this->insert(m.elt, m.elt_val);
 	}
 	void insert(member* m){
 		this->insert(m->n, m->mass);
@@ -317,7 +315,7 @@ public:
 			current->prev->next = current->next;
 			current = current->next;
 		}
-		sum_val -= tmp->e_val;
+		sum_val -= tmp->m.elt_val;
 		cnt--;
 		if (destroy) delete tmp;
 		return;// elt;
@@ -337,7 +335,7 @@ public:
 	void to_end(){ current = last; }
 	member curr_pos(){ 
 		member tmp = { nullptr, 0.0 };
-		if (current != nullptr) tmp = {current->elt, current->e_val };
+		if (current != nullptr) tmp = {current->m.elt, current->m.elt_val };
 		return tmp;
 	}
 

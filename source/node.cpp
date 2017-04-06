@@ -11,17 +11,17 @@ node::node(string nm) :ngb_amt(0), name(nm), parent(nullptr)
 node::~node()
 {
 	if (ngbs){
-		delete ngbs;
+		delete [] ngbs;
 	}
 }
 
 // add a neighbour - requires a pointer to a node
-//					and a mass value (or distance)
-int node::add_ngb(node * n, double mass){
+//					and a elt_val value (or distance)
+int node::add_ngb(node * elt, double elt_val){
 	if (!ngbs) ngbs = new ngb[MAX_NGBS];
-	if (!((mass < 0.0) || (ngb_amt >= MAX_NGBS))){  // to prohibit addint itself to its lis add " || (this == n) "  || !(this->is_ngb(n))
-		ngbs[ngb_amt].n  = n;
-		ngbs[ngb_amt].mass = mass;
+	if (!((elt_val < 0.0) || (ngb_amt >= MAX_NGBS))){  // to prohibit addint itself to its lis add " || (this == elt) "  || !(this->is_ngb(elt))
+		ngbs[ngb_amt].elt  = elt;
+		ngbs[ngb_amt].elt_val = elt_val;
 		ngb_amt++;
 		return 0;
 	}
@@ -29,40 +29,40 @@ int node::add_ngb(node * n, double mass){
 }
 
 // add a neighbour - requires a node instance
-int node::add_ngb(node &n, double mass){
-	return node::add_ngb(&n, mass);
+int node::add_ngb(node &elt, double elt_val){
+	return node::add_ngb(&elt, elt_val);
 }
 
-// change the mass of a neghbour by it's name
+// change the elt_val of a neghbour by it's name
 int node::set_ngb_mass(string nm, double new_mass){
 	if (new_mass < 0.0) throw 1;
 	for (int i = 0; i < ngb_amt; i++){
-		if (nm == ngbs[i].n->name){
-			ngbs[i].mass = new_mass;
+		if (nm == ngbs[i].elt->name){
+			ngbs[i].elt_val = new_mass;
 			return 0;
 		}
 	}
 	throw 2;
 }
 
-// change the mass of a neghbour by it's pointer
-int node::set_ngb_mass(node * n, double new_mass){
+// change the elt_val of a neghbour by it's pointer
+int node::set_ngb_mass(node * elt, double new_mass){
 	if (new_mass < 0.0) throw 1;
 	for (int i = 0; i < ngb_amt; i++){
-		if (n == ngbs[i].n){
-			ngbs[i].mass = new_mass;
+		if (elt == ngbs[i].elt){
+			ngbs[i].elt_val = new_mass;
 			return 0;
 		}
 	}
 	throw 2;
 }
 
-// get the mass of a neghbour by it's name
-double node::get_ngb_mass(string nm)const{
+// get the elt_val of a neghbour by it's name
+double node::get_ngb_mass(const string nm)const{
 	if (node::is_ngb(nm)){
 		for (int i = 0; i < ngb_amt; i++){
-			if (nm == ngbs[i].n->name){
-				return ngbs[i].mass;
+			if (nm == ngbs[i].elt->name){
+				return ngbs[i].elt_val;
 			}
 		}
 	}
@@ -73,7 +73,7 @@ double node::get_ngb_mass(string nm)const{
 // check if node is a neighbour by name
 bool node::is_ngb(const string nm)const{
 	for (int i = 0; i < ngb_amt; i++){
-		if ((ngbs[i].n->name == nm)){
+		if ((ngbs[i].elt->name == nm)){
 			return 1;
 		}
 	}
@@ -81,9 +81,9 @@ bool node::is_ngb(const string nm)const{
 }
 
 // check if node is a neighbour by pointer
-bool node::is_ngb(const node * n)const{
+bool node::is_ngb(const node * elt)const{
 	for (int i = 0; i < ngb_amt; i++){
-		if (ngbs[i].n == n)	return true;
+		if (ngbs[i].elt == elt)	return true;
 	}
 	return false;
 }
@@ -96,7 +96,7 @@ bool node::operator!=(const node &rhs) const {
 	return (this->name != rhs.name);
 };
 
-node node::operator=(const node& rhs) {
+node& node::operator=(const node& rhs) {
 	if (rhs != *this) {
 		this->name = rhs.name;
 		this->ngbs = rhs.ngbs;
